@@ -1,0 +1,19 @@
+services:
+  code:
+    image: dvilela/code
+    container_name: code
+    hostname: code
+    stdin_open: true
+    tty: true
+    ports:
+      - "2222:22"
+    volumes:
+      - /opt/code:/workspace
+      - /opt/code/.claude:/root/.claude
+      - /opt/code/.takopi:/root/.config/takopi
+    environment:
+      - DAVID_PASSWORD=${DAVID_PASSWORD:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN:-}
+    working_dir: /workspace
+    restart: unless-stopped
