@@ -11,7 +11,7 @@ RUN su - david -c "curl -fsSL https://claude.ai/install.sh | bash"
 ENV PATH="/home/david/.claude/local/bin:$PATH"
 
 # Install takopi for david user
-RUN su - david -c "/root/.local/bin/uv tool install -U takopi"
+RUN su - david -c "uv tool install -U takopi"
 
 # Working directory
 WORKDIR /workspace

@@ -19,9 +19,10 @@ RUN apt-get update && apt-get install -y \
 ENV LANG=es_ES.UTF-8
 ENV LC_ALL=es_ES.UTF-8
 
-# Install uv
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh
-ENV PATH="/root/.local/bin:$PATH"
+# Install uv globally
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
+    && mv /root/.local/bin/uv /usr/local/bin/ \
+    && mv /root/.local/bin/uvx /usr/local/bin/
 
 # Create david user with home, bash and sudo (unlocked for SSH)
 RUN useradd -m -s /bin/bash david \
