@@ -98,4 +98,12 @@ deploy-robaleira stack_id compose_file:
     @just _deploy-stack "{{portainer_url_robaleira}}" "{{portainer_token_robaleira}}" "{{portainer_endpoint_robaleira}}" "{{stack_id}}" "{{compose_file}}"
 
 # Full release: build, push, and deploy code
-release-deploy: release deploy-code
+release-deploy-code:
+    @echo "=== Building images ==="
+    just build
+    @echo ""
+    @echo "=== Pushing images to Docker Hub ==="
+    just push
+    @echo ""
+    @echo "=== Deploying to Portainer ==="
+    just deploy-code
