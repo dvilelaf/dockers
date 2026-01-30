@@ -9,8 +9,8 @@ services:
       - "2222:22"
     volumes:
       - /opt/code:/workspace
-      - /opt/code/.claude:/root/.claude
-      - /opt/code/.takopi:/root/.config/takopi
+      - /opt/code/.claude:/home/david/.claude
+      - /opt/code/.takopi:/home/david/.config/takopi
     environment:
       - DAVID_PASSWORD=${DAVID_PASSWORD:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
