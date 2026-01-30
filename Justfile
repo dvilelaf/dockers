@@ -41,6 +41,10 @@ release: build push
 clean:
     docker rmi {{base_image}} {{code_image}} || true
 
+# Scan for secrets with gitleaks
+scan:
+    gitleaks detect --source . -v
+
 # Portainer Proxmox
 portainer_url_proxmox := env("PORTAINER_URL_PROXMOX", "")
 portainer_token_proxmox := env("PORTAINER_API_TOKEN_PROXMOX", "")
