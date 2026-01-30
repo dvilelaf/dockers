@@ -23,7 +23,16 @@ Development environment based on `dvilela/base`. Includes:
 
 - Node.js 22
 - Claude Code CLI
-- takopi
+- takopi (auto-starts if configured)
+
+**First-time takopi setup:**
+
+1. SSH into the container: `ssh -p 2222 david@host`
+2. Run `takopi` and follow the interactive wizard
+3. The config will be saved to `~/.takopi/takopi.toml` (persisted via volume)
+4. On subsequent container starts, takopi will auto-start in the background
+
+Logs are written to `~/.takopi/takopi.log`.
 
 ## Usage
 

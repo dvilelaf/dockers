@@ -10,7 +10,7 @@ services:
     volumes:
       - /opt/code:/workspace
       - /opt/code/.claude:/home/david/.claude
-      - /opt/code/.takopi:/home/david/.config/takopi
+      - /opt/code/.takopi:/home/david/.takopi
     environment:
       - DAVID_PASSWORD=${DAVID_PASSWORD:-}
       - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}

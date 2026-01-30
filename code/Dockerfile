@@ -13,8 +13,12 @@ ENV PATH="/home/david/.claude/local/bin:$PATH"
 # Install takopi for david user
 RUN su - david -c "uv tool install -U takopi"
 
+# Override entrypoint to start takopi
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 # Working directory
 WORKDIR /workspace
 
-# Default command
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/bin/bash"]
