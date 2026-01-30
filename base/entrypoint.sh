@@ -9,6 +9,10 @@ else
     chage -d 0 david
 fi
 
+# Fix ownership of mounted volumes for david
+chown -R david:david /home/david/.claude 2>/dev/null || true
+chown -R david:david /home/david/.config 2>/dev/null || true
+
 # Start SSH in background
 /usr/sbin/sshd
 
