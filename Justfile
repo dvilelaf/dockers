@@ -57,6 +57,12 @@ portainer_endpoint_robaleira := env("PORTAINER_ENDPOINT_ID_ROBALEIRA", "1")
 
 code_stack_id := env("CODE_STACK_ID", "")
 
+# Environment variables for code stack
+code_david_password := env("DAVID_PASSWORD", "")
+code_david_ssh_key := env("DAVID_SSH_PRIVATE_KEY_B64", "")
+code_anthropic_key := env("ANTHROPIC_API_KEY", "")
+code_telegram_token := env("TELEGRAM_BOT_TOKEN", "")
+
 # Deploy code stack to Portainer Proxmox
 deploy-code:
     @if [ -z "{{portainer_url_proxmox}}" ] || [ -z "{{portainer_token_proxmox}}" ] || [ -z "{{code_stack_id}}" ]; then \
@@ -67,7 +73,7 @@ deploy-code:
     @response=$(curl -s -X PUT "{{portainer_url_proxmox}}/api/stacks/{{code_stack_id}}?endpointId={{portainer_endpoint_proxmox}}" \
         -H "X-API-Key: {{portainer_token_proxmox}}" \
         -H "Content-Type: application/json" \
-        -d "$(jq -n --arg content "$(cat code/docker-compose.yml)" '{stackFileContent: $content, pullImage: true, prune: false}')"); \
+        -d "$(jq -n --arg content "$(cat code/docker-compose.yml)" --arg david_password "{{code_david_password}}" --arg david_ssh_key "{{code_david_ssh_key}}" --arg anthropic_key "{{code_anthropic_key}}" --arg telegram_token "{{code_telegram_token}}" '{stackFileContent: $content, pullImage: true, prune: false, env: [{name: "DAVID_PASSWORD", value: $david_password}, {name: "DAVID_SSH_PRIVATE_KEY_B64", value: $david_ssh_key}, {name: "ANTHROPIC_API_KEY", value: $anthropic_key}, {name: "TELEGRAM_BOT_TOKEN", value: $telegram_token}]}')"); \
     if echo "$response" | jq -e '.Id' > /dev/null 2>&1; then \
         echo "OK: Stack deployed successfully"; \
     else \
