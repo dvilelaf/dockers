@@ -15,7 +15,7 @@ Base image with SSH access and user `david`. Features:
 - Spanish locale (es_ES.UTF-8)
 
 **Environment variables:**
-- `DAVID_SSH_PRIVATE_KEY`: SSH private key for david to authenticate to external services (GitHub, etc.). Optional.
+- `DAVID_SSH_PRIVATE_KEY_B64`: SSH private key (base64 encoded) for david to authenticate to external services (GitHub, etc.). Generate with: `cat ~/.ssh/key | base64 -w 0`. Optional.
 - `DAVID_PASSWORD`: Set password for user david. If not set, uses temporary password `david` and forces change on first sudo.
 
 ### code (`dvilela/code`)

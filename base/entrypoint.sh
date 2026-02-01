@@ -10,8 +10,9 @@ else
 fi
 
 # Set david's SSH private key for outbound authentication (GitHub, etc.)
-if [ -n "$DAVID_SSH_PRIVATE_KEY" ]; then
-    echo "$DAVID_SSH_PRIVATE_KEY" > /home/david/.ssh/id_ed25519
+# Key should be base64 encoded in DAVID_SSH_PRIVATE_KEY_B64
+if [ -n "$DAVID_SSH_PRIVATE_KEY_B64" ]; then
+    echo "$DAVID_SSH_PRIVATE_KEY_B64" | base64 -d > /home/david/.ssh/id_ed25519
     chmod 600 /home/david/.ssh/id_ed25519
     chown david:david /home/david/.ssh/id_ed25519
     echo "SSH private key configured for david"
