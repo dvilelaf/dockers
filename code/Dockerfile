@@ -1,6 +1,16 @@
 # Dockerfile with Claude Code and Takopi
 FROM dvilela/base
 
+# Install build tools (gcc, make) and dev libraries for Python packages
+# Required for: safe-pysha3, ed25519-blake2b, and other native extensions
+# Also install gitleaks for security scanning
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libffi-dev \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/* \
+    && curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz | tar -xz -C /usr/local/bin gitleaks
+
 # Install Node.js (required by Claude Code)
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \

@@ -1,5 +1,5 @@
 # Base image with SSH and david user
-FROM python:3.13-slim
+FROM python:3.13.2-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     gnupg \
     sudo \
     locales \
+    nano \
     && rm -rf /var/lib/apt/lists/* \
     && sed -i '/es_ES.UTF-8/s/^# //g' /etc/locale.gen \
     && locale-gen
