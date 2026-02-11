@@ -17,6 +17,14 @@ build-code:
 # Build both images (base first)
 build: build-base build-code
 
+# Rebuild code image without cache (to update takopi to latest version)
+rebuild-code:
+    docker build --no-cache -t {{code_image}} code/
+
+# Rebuild base image without cache
+rebuild-base:
+    docker build --no-cache -t {{base_image}} base/
+
 # Push base image
 push-base:
     docker push {{base_image}}
@@ -110,6 +118,17 @@ release-deploy-code:
     @echo ""
     @echo "=== Pushing images to Docker Hub ==="
     just push
+    @echo ""
+    @echo "=== Deploying to Portainer ==="
+    just deploy-code
+
+# Rebuild code without cache (update takopi), push, and deploy
+rebuild-deploy-code:
+    @echo "=== Rebuilding code image (no cache - updates takopi) ==="
+    just rebuild-code
+    @echo ""
+    @echo "=== Pushing image to Docker Hub ==="
+    just push-code
     @echo ""
     @echo "=== Deploying to Portainer ==="
     just deploy-code
