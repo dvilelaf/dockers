@@ -26,18 +26,30 @@ chown -R david:david /home/david/.takopi 2>/dev/null || true
 # Start SSH in background
 /usr/sbin/sshd
 
-# Start takopi as david user if config exists
-if [ -f /home/david/.takopi/takopi.toml ]; then
-    echo "Starting takopi..."
-    cd /home/david
-    export PATH="/home/david/.claude/local/bin:/home/david/.local/bin:$PATH"
-    runuser -u david -- env PATH="$PATH" nohup /home/david/.local/bin/takopi >> /home/david/.takopi/takopi.log 2>&1 &
-    sleep 2
-    if pgrep -u david -f takopi > /dev/null; then
-        echo "takopi started successfully (PID: $(pgrep -u david -f takopi))"
-    else
-        echo "WARNING: takopi failed to start, check ~/.takopi/takopi.log"
+# Remove stale takopi lock file
+TAKOPI_LOCK="/home/david/.takopi/takopi.lock"
+if [ -f "$TAKOPI_LOCK" ]; then
+    lock_pid=$(python3 -c "import json; print(json.load(open('$TAKOPI_LOCK'))['pid'])" 2>/dev/null)
+    if [ -n "$lock_pid" ] && ! kill -0 "$lock_pid" 2>/dev/null; then
+        echo "Removing stale takopi lock (PID $lock_pid not running)"
+        rm -f "$TAKOPI_LOCK"
     fi
+fi
+
+# Start takopi with watchdog that restarts it if it crashes
+if [ -f /home/david/.takopi/takopi.toml ]; then
+    export PATH="/home/david/.claude/local/bin:/home/david/.local/bin:$PATH"
+    (
+        cd /home/david
+        while true; do
+            rm -f "$TAKOPI_LOCK"
+            echo "$(date -Iseconds) Starting takopi..." >> /home/david/.takopi/takopi.log
+            runuser -u david -- env PATH="$PATH" /home/david/.local/bin/takopi >> /home/david/.takopi/takopi.log 2>&1
+            echo "$(date -Iseconds) takopi exited (code $?), restarting in 10s..." >> /home/david/.takopi/takopi.log
+            sleep 10
+        done
+    ) &
+    echo "takopi watchdog started"
 fi
 
 # Execute main command
